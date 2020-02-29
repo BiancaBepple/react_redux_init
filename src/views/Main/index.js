@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
 import { Title, Card, SendButton, MyInput, PaperNome } from './styles';
 
 import PersonItem from '../../components/PersonItem';
+import * as PersonActions from '../../store/modules/person/actions';
 
 
 
@@ -30,10 +33,16 @@ class Main extends Component {
     };
 
     handleSubmit = e => {
+        this.sendToStore(this.state.newPerson);
         e.preventDefault();
         this.setState({ persons: [...this.state.persons, this.state.newPerson], newPerson: '', });
 
     };
+
+    sendToStore = (person) => {
+        const {addToPerson} = this.props;
+        addToPerson(person);
+    }
 
     handleDelete = person => {
          this.setState({
@@ -76,4 +85,7 @@ class Main extends Component {
         );
     }
 }
-export default Main;
+
+const mapDispatchToProps = dispatch =>
+bindActionCreators(PersonActions, dispatch);
+export default connect(null, mapDispatchToProps)(Main);
